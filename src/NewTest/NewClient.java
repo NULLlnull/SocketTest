@@ -50,7 +50,7 @@ public class NewClient extends Socket {
         try {
             dis = new DataInputStream(this.getInputStream());
             String fileName = dis.readUTF();
-            File file = new File("D:\\test" + fileName);
+            File file = new File("G:\\test1.txt" + fileName);
             fos = new FileOutputStream(file);
             byte[] bytes = new byte[1024];
             int len = 0;
