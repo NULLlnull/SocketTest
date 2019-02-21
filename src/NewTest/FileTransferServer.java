@@ -14,7 +14,7 @@ public class FileTransferServer {
 //        super(SERVER_PORT);
 //    }
 //
-    private void load(Socket socket) {
+    public void load(Socket socket) {
 //        while (true) {
 //            Socket socket = this.accept();
         new Thread(new mTask(socket)).start();
@@ -30,7 +30,8 @@ public class FileTransferServer {
             ServerSocket server = new ServerSocket(SERVER_PORT);
             while (true) {
                 Socket socket = server.accept();
-                System.out.println("客户端连接：" + socket.getInetAddress());
+                System.out.println("客户端连接：" + socket.getInetAddress() + " ：" + new Date());
+//                new Thread().sleep(1000);
                 mserver.load(socket);
             }
         } catch (Exception e) {
@@ -51,10 +52,13 @@ public class FileTransferServer {
         public void run() {
             try {
                 File[] files = new File[3];
-                files[0] = new File("D:\\test1.txt");
-                files[1] = new File("D:\\test2.txt");
+//                files[0] = new File("D:\\test1.txt");
+//                files[1] = new File("D:\\test2.txt");
+                files[0] = new File("G:\\test1.txt");
+                files[1] = new File("G:\\test2.txt");
+                files[2] = new File("G:\\test3.txt");
 //                files[2] = new File("D:\\test3.txt");
-                files[2] = new File("D:\\Splash.bmp");
+//                files[2] = new File("D:\\Splash.bmp");
                 sendFile(socket, files);
 //                sendFile("D:\\Splash.bmp");
 //                sendFile("D:\\fiddlersetup.exe");
@@ -64,7 +68,7 @@ public class FileTransferServer {
             }
         }
 
-        protected void sendFile(Socket socket, File[] files) {
+        void sendFile(Socket socket, File[] files) {
             long totalSize = 0;
             byte buf[] = new byte[8192];
             int len;
@@ -74,6 +78,15 @@ public class FileTransferServer {
                 }
                 DataOutputStream dout = new DataOutputStream(
                         socket.getOutputStream());
+                /**
+                 * @1 图片
+                 * @2 视频
+                 * @3 网页
+                 */
+                dout.writeInt(1);
+                dout.flush();
+
+
                 dout.writeInt(files.length);
                 for (int i = 0; i < files.length; i++) {
                     dout.writeUTF(files[i].getName());
@@ -93,7 +106,7 @@ public class FileTransferServer {
 //                        dout.flush();
                     }
                 }
-                System.out.println("文件传输完成");
+                System.out.println("文件传输完成：" + new Date());
             } catch (Exception e) {
                 e.printStackTrace();
             }
